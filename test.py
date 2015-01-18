@@ -1,5 +1,4 @@
-sniffer_status = True
-message = "sniffer    : %s" % ("ON" if sniffer_status else "OFF")
+tel = {'jack': 4098, 'sape': 4139}
 
+print tel['jack']
 
-print message

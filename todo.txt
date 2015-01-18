@@ -1,4 +1,28 @@
 - Create git repository | DONE
 - Implement help command | DONE
 - Implement status command | DONE
-- Integrate neofite
+- Integrate neofite | DONE
+-- Make sure both neofite and reaper bot use the same config | DONE
+- Setup local irc server | DONE
+- Extend status command | DONE
+- Install aircrack | DONE
+- Checkout RFKILL problem | DONE use rfkill list to get list of blocked devices. rfkill unblock <id> to unblock
+
+
+# SCANNER
+- Display actual scanner status | DONE
+- Implement start scanner command | DONE
+- Implement stop scanner command
+- Implement display scan list command
+
+# TARGETER
+- implement display target list command
+- implement stop targeter command
+
+
+# ATTACKER
+
+
+
+LP
+- Build context sensitive help
