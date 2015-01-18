@@ -1,1 +1,3 @@
-- Create git repository
+- Create git repository | DONE
+- Implement help command | DONE
+- Implement status command
