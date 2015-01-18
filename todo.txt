@@ -1,3 +1,4 @@
 - Create git repository | DONE
 - Implement help command | DONE
-- Implement status command
+- Implement status command | DONE
+- Integrate neofite

