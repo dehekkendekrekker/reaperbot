@@ -12,8 +12,9 @@
 # SCANNER
 - Display actual scanner status | DONE
 - Implement start scanner command | DONE
-- Implement stop scanner command
+- Implement stop scanner command | DONE
 - Implement display scan list command
+- Build error handler in case the airodump process failed to start
 
 # TARGETER
 - implement display target list command

