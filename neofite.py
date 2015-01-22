@@ -32,15 +32,14 @@ class neofite:
 
     def start_scanner(self):
         if self.is_scanner_running():
-            self.logger.error("scanner already running")
             return False
 
         self.scanner.scanner_starting = True
         self.scanner.remove_previous_csv()
         self.scanner.enable_monitor_mode(self.scanner.listen_interface)
-        self.scanner.start_airodump()
+        scanner_up = self.scanner.start_airodump()
         self.scanner.scanner_starting = False
-        return True
+        return scanner_up
 
     def stop_scanner(self):
         if not self.is_scanner_running():

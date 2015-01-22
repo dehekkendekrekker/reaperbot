@@ -117,8 +117,10 @@ class ReaperBot(irc.IRCClient):
             return
 
         if self.command[1] == "scanner":
-            if not self.neofite.start_scanner():
+            if self.neofite.is_scanner_running():
                 self.msg(self.channel, "[!] scanner already started")
+            elif not self.neofite.start_scanner():
+                self.msg(self.channel, "[!] error starting scanner, check logfile")
             else:
                 self.msg(self.channel, "[+] scanner started")
             return

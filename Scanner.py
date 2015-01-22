@@ -3,23 +3,15 @@ from subprocess import Popen, call, PIPE
 import os
 import threading
 import stations
+import time
 
 
 DN = open(os.devnull, 'w')
 
 
-
-
 class Scanner:
-    logger = None
-    scanner_starting = False
-    listen_interface = None
-    listen_monitor_interface = None
-    listen_dump_file = None
-    tmp_dir = None
-    airodump_thread_hnd = None
-
     def __init__(self, config, logger):
+        self.listen_monitor_interface = None
         self.logger = logger
         self.tmp_dir = config.tmp_dir
         self.wireless_interfaces = list()
@@ -27,6 +19,7 @@ class Scanner:
         self.listen_dump_file = config.listen_dump_file
         self.airodump_thread_hnd = None
         self.scanner_starting = False
+        self.scanner_start_result = None
 
     def enable_monitor_mode(self, iface):
         self.logger.notice("Taking down [" + iface + "]")
@@ -56,13 +49,26 @@ class Scanner:
         path = self.tmp_dir + '/' + self.listen_dump_file
         dumpname = path + "-01.csv"
         self.logger.notice('dumping to ' + dumpname)
-        call(['airodump-ng', '-i', self.listen_monitor_interface, '-w', path, '--output-format', 'csv'], stdout=DN, stderr=DN)
+        proc = Popen(['airodump-ng', '-i', self.listen_monitor_interface, '-w', path, '--output-format', 'csv'],
+                     stdout=PIPE, stderr=PIPE)
+
+        # Airodump should now be running. If it somehow fails to start, the thread will continue here
+
+        return_text = proc.communicate()[1]
+        return_code = proc.returncode
+
+        self.scanner_start_result = [return_code, return_text]
+        self.logger.error("Failed to start scanner! Return code [" + str(return_code) + "]:" + return_text)
 
     def start_airodump(self):
         self.logger.notice("Starting airodump")
         self.airodump_thread_hnd = threading.Thread(target=self.airodump_thread)
         self.airodump_thread_hnd.daemon = False
         self.airodump_thread_hnd.start()
+
+        # Wait for while to give airodump a chance to fail at start.
+        time.sleep(0.5)
+        return self.airodump_thread_hnd.is_alive()
 
     def stop_airodump(self):
         proc = Popen(['pidof', 'airodump-ng'], stdout=PIPE, stderr=DN)
