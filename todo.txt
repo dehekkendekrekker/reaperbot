@@ -13,8 +13,8 @@
 - Display actual scanner status | DONE
 - Implement start scanner command | DONE
 - Implement stop scanner command | DONE
-- Implement display scan list command
-- Build error handler in case the airodump process failed to start
+- Implement display scan list command | DONE
+- Build error handler in case the airodump process failed to start | DONE
 
 # TARGETER
 - implement display target list command

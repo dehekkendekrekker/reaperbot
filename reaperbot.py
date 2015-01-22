@@ -65,6 +65,10 @@ class ReaperBot(irc.IRCClient):
             self.stop()
             return
 
+        if (self.command[0] == "display"):
+            self.display()
+            return
+
     # Handles the authentication of a user.
     # Only one user can be authenticated, and is therefor able to issue commands
     def handle_auth(self):
@@ -137,6 +141,28 @@ class ReaperBot(irc.IRCClient):
                 self.neofite.stop_scanner()
                 self.msg(self.channel, "[+] scanner stopped")
             return
+
+    def display(self):
+        if len(self.command) != 2:
+            self.msg(self.channel, "[!] missing operand [scanlist]")
+            return
+
+        if self.command[1] == "scanlist":
+            stations = self.neofite.scanner.get_detected_stations()
+            self.msg(self.channel, "Prio\tMAC               \tapwr\t#\tname")
+            self.msg(self.channel, "--------------------------------------------------------------------------")
+            prio = 1
+            y = 2
+            for ap in stations.aps:
+                if prio <= 10:
+                    self.msg(self.channel, "%i\t%s\t%i\t%i\t%s" % (prio, ap.mac, ap.get_avg_power(), len(ap.associations), ap.essid))
+                    y += 1
+                else:
+                    remaining = len(self.target_aps) - self.target_display_limit
+                    self.msg(self.channel, "%i More ..." % (remaining))
+                prio += 1
+            self.msg(self.channel, "--------------------------------------------------------------------------")
+
 
 class BotFactory(protocol.ClientFactory):
     def __init__(self, config):
