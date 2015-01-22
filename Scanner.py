@@ -27,7 +27,16 @@ class Scanner:
 
         self.logger.notice("Enabling monitor mode on [" + iface + "]")
         monitors_pre = self.enumerate_monitor_wireless_interfaces()
-        call(['airmon-ng', 'start', iface], stdout=PIPE, stderr=DN)
+        process = Popen(['airmon-ng', 'start', iface], stdout=PIPE, stderr=DN)
+
+        # Airmon gives off a warning if there are processes that could possibly interfere with the aircrack suite
+        # Let's try to catch those messages
+        result_text = process.communicate()
+        if result_text[1]:
+            self.logger.notice("airmon experiences some problems enabling monitor mode ..")
+            self.logger.notice("output stderr: [" + result_text[1] + "]")
+            self.logger.notice("output stdout: [" + result_text[0] + "]")
+
         monitors_post = self.enumerate_monitor_wireless_interfaces()
 
         result = list(set(monitors_post) - set(monitors_pre))

@@ -1,8 +1,9 @@
 from subprocess import Popen, call, PIPE
 
-proc = Popen(['airodump-ng', '-i', 'mon0', '-w', '/tmp/bleh.csv', '--output-format', 'csv'], stdout=PIPE, stderr=PIPE)
-result = proc.communicate()
-return_code = proc.returncode
 
-if return_code
-print return_code
+process = Popen(['airmon-ng', 'start', 'mon0'], stdout=PIPE, stderr=PIPE)
+return_text = process.communicate()
+
+if return_text[1]:
+
+
